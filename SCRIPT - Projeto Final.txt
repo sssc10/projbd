@@ -1,0 +1,90 @@
+************** PROJETO BANCO DE DADOS ************
+
+create database estacionamento;	
+use estacionamento;	
+
+--TABELA USUARIOS
+create table usuarios(			
+coduser int not null primary key auto_increment,			
+nome varchar(45),			
+matricula varchar(100)		
+);			
+
+--ADD DADOS TABELA USUÁRIOS			
+insert into usuarios (nome, matricula) values ('Ricardo', 8112024);	
+
+SELECT * FROM USUARIOS;
+
+TABELA CLIENTES
+
+create table clientes(			
+codcli INT not null primary key auto_increment,			
+nome varchar (40),			
+contato decimal (10)			
+);
+
+
+ - - 	add dados tabela CLIENTES
+insert into clientes (nome, contato) values ('Danielle',997490929);											
+insert into clientes (nome, contato) values ('Fabio',912309870);											
+insert into clientes (nome, contato) values ('Henrique',987731230);											
+insert into clientes (nome, contato) values ('Tatiane',999966770);											
+insert into clientes (nome, contato) values ('Jorge',905439985);											
+insert into clientes (nome, contato) values ('Isabel',977848854);
+
+
+SELECT * FROM CLIENTES;
+
+--TABELA VEICULOS
+
+
+create table veiculos(
+codveic int not null primary key auto_increment,
+tipo varchar (50),
+marca varchar (50),
+modelo varchar (50),
+placa varchar (15),
+codcli int
+foreign key (codcli) references clientes (codcli)
+);
+
+
+
+ - - 	add dados tabela veiculos
+insert into veiculos (tipo, marca, modelo, placa, codcli) values ('carro','Chevrolet','Onix','DN3E11',1);
+insert into veiculos (tipo, marca, modelo, placa, codcli) values ('moto','Honda','CB-500','FB4E11',2);	
+insert into veiculos (tipo, marca, modelo, placa, codcli) values ('moto','Yanaha','Teneré','HQ2910',3);	
+insert into veiculos (tipo, marca, modelo, placa, codcli) values ('moto','Honda','Bis','TT6D11',4);	
+insert into veiculos (tipo, marca, modelo, placa, codcli) values ('carro','VW','Virtus','JR8D11',5);	
+insert into veiculos (tipo, marca, modelo, placa, codcli) values ('carro','Renault','Sandeiro','IS6E11',6);
+
+
+select * from veiculos;
+use estacionamento;
+
+--TABELA ESTACIONAMENTO
+
+create table estacionamento(			
+codest int not null primary key auto_increment,			
+coduser int,			
+codcli int, 
+data date, 
+hora time,			
+status varchar (50),		
+foreign key (coduser) references usuarios (coduser),			
+foreign key (codcli) references clientes (codcli)			
+);			
+
+
+- - 	add dados tabela Estacionamento								
+insert into estacionamento (coduser, codcli, data, hora, status) values (1, 2,'2024-11-02','09:00','vagou');									
+insert into estacionamento (coduser, codcli, data, hora, status) values (1, 4, '2024-11-02','11:00','vagou');									
+insert into estacionamento (coduser, codcli, data, hora, status) values (1,6, '2024-11-02','13:30','estacionado');									
+insert into estacionamento (coduser, codcli, data, hora, status) values (1,3, '2024-11-02','15:25','estacionado');									
+insert into estacionamento (coduser, codcli, data, hora, status) values (1,1, '2024-11-03','10:00','estacionado');									
+insert into estacionamento (coduser, codcli, data, hora, status) values (1,6, '2024-11-03','12:00','vagou');									
+insert into estacionamento (coduser, codcli, data, hora, status) values (1,3, '2024-11-03','14:00','estacionado');									
+insert into estacionamento (coduser, codcli, data, hora, status) values (1,5, '2024-11-04','10:30','estacionado');									
+
+
+select * from estacionamento;

@@ -1,0 +1,187 @@
+Projeto de Banco de Dados do final do curso -  Simone Silva de Santana Cruz
+Vence 7 de março de 2025 às 19:00
+Instruções
+Desenvolver um sistema de Banco de Dados para um sistema de estacionamento que tem o operador do sistema, os clientes, veículos desses clientes (donos(as)) e o estacionamento (local que vai centralizar as informações).
+Começando com a criação do Diagrama do MER, feito no DrawDB, com as seguintes informações:
+
+Os usuários terão o seu nome e matrícula;
+
+Os clientes terão o nome e contato;
+
+Os veículos terão  o tipo(se é carro ou moto), marca, modelo, placa e qual cliente é o seu proprietário;
+
+O estacionamento identificará que é os operadores; os clientes; os veículos; data e hora de entrada dos veículos no estacionamento (referenciar pelo proprietário, ou seja, o cliente); e o status que informará se os veículos estão ou não estacionados nas vagas do estacionamento.
+
+Todas as tabelas tem chave primária.
+
+Fazer primeiro o Diagrama do MER e depois, criar o banco de dados no sql.
+
+Link do diagrama >>>  https://drawdb.vercel.app/editor?shareId=d1bf4cbf53cec8d77e44f3788c525cc6
+
+Inserir os dados das planilhas anexadas.
+
+************** PROJETO BANCO DE DADOS ************
+
+create database estacionamento;	
+use estacionamento;	
+
+--TABELA USUARIOS
+create table usuarios(			
+coduser int not null primary key auto_increment,			
+nome varchar(45),			
+matricula varchar(100)		
+);			
+
+--ADD DADOS TABELA USUÁRIOS			
+insert into usuarios (nome, matricula) values ('Ricardo', 8112024);	
+
+SELECT * FROM USUARIOS;
+
+
+--TABELA CLIENTES
+
+create table clientes(			
+codcli INT not null primary key auto_increment,			
+nome varchar (40),			
+contato decimal (10)			
+);
+
+ - - 	add dados tabela CLIENTES
+insert into clientes (nome, contato) values ('Danielle',997490929);											
+insert into clientes (nome, contato) values ('Fabio',912309870);											
+insert into clientes (nome, contato) values ('Henrique',987731230);											
+insert into clientes (nome, contato) values ('Tatiane',999966770);											
+insert into clientes (nome, contato) values ('Jorge',905439985);											
+insert into clientes (nome, contato) values ('Isabel',977848854);
+
+
+SELECT * FROM CLIENTES;
+
+--TABELA VEICULOS
+
+create table veiculos(
+codveic int not null primary key auto_increment,
+tipo varchar (50),
+marca varchar (50),
+modelo varchar (50),
+placa varchar (15),
+codcli int
+foreign key (codcli) references clientes (codcli)
+);
+
+
+ - - 	add dados tabela veiculos
+insert into veiculos (tipo, marca, modelo, placa, codcli) values ('carro','Chevrolet','Onix','DN3E11',1);
+insert into veiculos (tipo, marca, modelo, placa, codcli) values ('moto','Honda','CB-500','FB4E11',2);	
+insert into veiculos (tipo, marca, modelo, placa, codcli) values ('moto','Yanaha','Teneré','HQ2910',3);	
+insert into veiculos (tipo, marca, modelo, placa, codcli) values ('moto','Honda','Bis','TT6D11',4);	
+insert into veiculos (tipo, marca, modelo, placa, codcli) values ('carro','VW','Virtus','JR8D11',5);	
+insert into veiculos (tipo, marca, modelo, placa, codcli) values ('carro','Renault','Sandeiro','IS6E11',6);
+
+
+select * from veiculos;
+
+
+--TABELA ESTACIONAMENTO
+
+create table estacionamento(			
+codest int not null primary key auto_increment,			
+coduser int,			
+codcli int, 
+data date, 
+hora time,			
+status varchar (50),		
+foreign key (coduser) references usuarios (coduser),			
+foreign key (codcli) references clientes (codcli)			
+);			
+
+
+- - 	add dados tabela Estacionamento								
+insert into estacionamento (coduser, codcli, data, hora, status) values (1, 2,'2024-11-02','09:00','vagou');									
+insert into estacionamento (coduser, codcli, data, hora, status) values (1, 4, '2024-11-02','11:00','vagou');									
+insert into estacionamento (coduser, codcli, data, hora, status) values (1,6, '2024-11-02','13:30','estacionado');									
+insert into estacionamento (coduser, codcli, data, hora, status) values (1,3, '2024-11-02','15:25','estacionado');									
+insert into estacionamento (coduser, codcli, data, hora, status) values (1,1, '2024-11-03','10:00','estacionado');									
+insert into estacionamento (coduser, codcli, data, hora, status) values (1,6, '2024-11-03','12:00','vagou');									
+insert into estacionamento (coduser, codcli, data, hora, status) values (1,3, '2024-11-03','14:00','estacionado');									
+insert into estacionamento (coduser, codcli, data, hora, status) values (1,5, '2024-11-04','10:30','estacionado');									
+
+select * from usuarios;
+select * from clientes;
+select * from veiculos;
+select * from estacionamento;
+
+
+***
+
+***Fazer uma consulta que liste os veículos no estacionamento e traga a data e hora que estacionou; os nomes e contatos dos proprietários; tipo, placa, modelo dos veículos estacionados e o operador do estacionamento que atendeu.
+
+select e.data, e.hora, c.nome, c.contato, v.tipo, v.placa, v.modelo, e.status
+from veiculos v 
+join clientes c on c.codcli = v.codcli
+join veiculos u on v.codcli = u.codcli
+join estacionamento e on e.codcli = v.codcli
+where e.status = 'estacionado';
+
+
+
+***Cadastrar Matheus, contato 993210589, o proprietário da moto XXT da BMW, que estacionou no dia 04/11/2024 às 16:00 que ainda permanece no estacionamento. 
+
+insert into clientes (nome, contato) values ('Matheus',993210589);
+insert into veiculos (tipo, marca, modelo, placa, codcli) values ('moto','BMW','XXT','DN9E11',7);
+insert into estacionamento (coduser, codcli, data, hora, status) values (1,7, '2024-11-04','16:00','estacionado');	
+
+
+***Criar uma consulta que informe os detalhes específico do segundo veículo estacionado no dia 02/11/2024 com a data e hora que estacionou; o status que informa se continua ou não estacionado; o nome e o contato do proprietário; o tipo, placa e modelo do veículo; e o nome do operador do estacionamento que o atendeu.
+
+
+select v.codveic, e.data, e.hora, e.status, c.nome, c.contato, v.tipo, v.placa, v.modelo, u.nome
+from estacionamento e 
+join clientes c on c.codcli = e.codcli
+join veiculos v on v.codcli = e.codcli
+join usuarios u on u.coduser = e.coduser
+where codveic = 2 and data = '2024-11-02';
+
+
+***Fazer uma consulta que mostre o total de motos e o total de carros no estacionamento.
+
+select  
+sum(tipo = 'carro') as Total_carro,
+sum(tipo = 'moto') as Total_moto
+from veiculos v
+join estacionamento e on e.codcli = v.codcli
+where status = 'estacionado';
+
+
+***Fazer um consulta que liste os clientes e coloque os nomes em ordem decrescente.
+
+select * from clientes order by nome desc;
+
+
+***Atualizar os status dos veículos estacionados no dia 02/11/2024 para 'vagou'.
+
+update estacionamento set status = 'vagou'
+where data = '2024-11-02' and status = 'estacionado'; 
+
+
+***Atualizar o status da moto pertencente ao Matheus para 'vagou'.
+
+update estacionamento set status = 'vagou'
+where codcli = 7 and status = 'estacionado';
+
+
+***Excluir o cadastro do proprietário Matheus e da sua moto; 
+
+delete from estacionamento
+where codcli = 7;
+
+delete from veiculos
+where codveic = 7;
+
+delete from clientes
+where codcli = 7;
+
+
+OBS:  o diagrama MER deverá ser feito somente no drawDB. Os comandos sql deverão ser entregue somente em arquivo de texto (bloco de notas) não aceitando pdf, word e outros.
+
+Boa sorte!
